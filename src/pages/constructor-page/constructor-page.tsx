@@ -1,15 +1,14 @@
-import { useSelector } from '../../services/store';
-
 import styles from './constructor-page.module.css';
 
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { FC } from 'react';
+import { selectedConstructorIsLoading } from '../../services/constructor/constructorSlice';
+import { useSelector } from 'react-redux';
 
 export const ConstructorPage: FC = () => {
-  /** TODO: взять переменную из стора */
-  const isIngredientsLoading = false;
+  const isIngredientsLoading = useSelector(selectedConstructorIsLoading);
 
   return (
     <>
@@ -23,8 +22,8 @@ export const ConstructorPage: FC = () => {
             Соберите бургер
           </h1>
           <div className={`${styles.main} pl-5 pr-5`}>
-            <BurgerIngredients />
-            <BurgerConstructor />
+            {/* <BurgerIngredients />
+            <BurgerConstructor /> */}
           </div>
         </main>
       )}
