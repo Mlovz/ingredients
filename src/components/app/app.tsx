@@ -1,4 +1,12 @@
-import { ConstructorPage, NotFound404 } from '@pages';
+import {
+  ConstructorPage,
+  Feed,
+  ForgotPassword,
+  Login,
+  NotFound404,
+  Profile,
+  Register
+} from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
 
@@ -21,6 +29,10 @@ const App = () => {
       <Routes>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='*' element={<NotFound404 />} />
+        <Route path='/feed' element={<Feed />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
       </Routes>
     </div>
   );
