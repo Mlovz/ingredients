@@ -5,7 +5,7 @@ import { userSelectors } from '../../services/user/userSlice';
 
 export const Profile: FC = () => {
   const user = useSelector(userSelectors.selectedUser);
-
+  const [inputDisabled, setInputDisabled] = useState(true);
   const [formValue, setFormValue] = useState({
     name: user?.name || '',
     email: user?.email || '',
@@ -45,8 +45,11 @@ export const Profile: FC = () => {
     }));
   };
 
+  const handleIconClick = (e: React.ChangeEvent<HTMLDivElement>) => {};
+
   return (
     <ProfileUI
+      inputDisabled={inputDisabled}
       formValue={formValue}
       isFormChanged={isFormChanged}
       handleCancel={handleCancel}

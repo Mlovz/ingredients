@@ -9,6 +9,7 @@ import { ProfileMenu } from '@components';
 
 export const ProfileUI: FC<ProfileUIProps> = ({
   formValue,
+  inputDisabled,
   isFormChanged,
   updateUserError,
   handleSubmit,
@@ -35,6 +36,7 @@ export const ProfileUI: FC<ProfileUIProps> = ({
             errorText={''}
             size={'default'}
             icon={'EditIcon'}
+            disabled={inputDisabled}
           />
         </div>
         <div className='pb-6'>

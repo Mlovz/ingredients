@@ -18,6 +18,7 @@ export interface UserState {
   user: TUser | null;
   error: string | null;
   isLoading: boolean;
+  token: object | null;
 }
 
 export const loginUser = createAsyncThunk(
@@ -30,17 +31,20 @@ export const loginUser = createAsyncThunk(
   }
 );
 
-const forgotPassword = createAsyncThunk(
+export const forgotPassword = createAsyncThunk(
   'user/frogotPassword',
-  forgotPasswordApi
+  (email: string) => forgotPasswordApi({ email })
 );
-const resetPassword = createAsyncThunk('user/resetPassword', resetPasswordApi);
+export const resetPassword = createAsyncThunk(
+  'user/resetPassword',
+  resetPasswordApi
+);
 export const logout = createAsyncThunk('user/logout', async () => {
   await logoutApi();
   localStorage.removeItem('refreshToken');
   return null;
 });
-const updateUser = createAsyncThunk('user/update', updateUserApi);
+export const updateUser = createAsyncThunk('user/update', updateUserApi);
 
 export const registerUser = createAsyncThunk(
   'user/register',
@@ -57,7 +61,8 @@ export const getUser = createAsyncThunk('user/get', getUserApi);
 const initialState: UserState = {
   user: null,
   error: null,
-  isLoading: false
+  isLoading: false,
+  token: null
 };
 
 export const userSlice = createSlice({
@@ -106,7 +111,6 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.error = 'Произошла ошибка';
       })
-
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
       })
@@ -115,6 +119,17 @@ export const userSlice = createSlice({
         state.user = null;
       })
       .addCase(logout.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = 'Произошла ошибка';
+      })
+      .addCase(forgotPassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
         state.isLoading = false;
         state.error = 'Произошла ошибка';
       });
