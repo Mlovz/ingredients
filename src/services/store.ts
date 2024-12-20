@@ -7,10 +7,13 @@ import {
 } from 'react-redux';
 import { constructorReducer } from './constructor/constructorSlice';
 import { userReducer } from './user/userSlice';
+import { profile } from 'console';
+import { profileReducer } from './profile/profileSlice';
 
 const rootReducer = combineReducers({
   ingredients: constructorReducer,
-  user: userReducer
+  user: userReducer,
+  profile: profileReducer
 });
 
 const store = configureStore({

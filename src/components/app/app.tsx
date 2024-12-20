@@ -1,3 +1,4 @@
+import { AppHeader, IngredientDetails, Modal } from '@components';
 import {
   ConstructorPage,
   Feed,
@@ -5,20 +6,22 @@ import {
   Login,
   NotFound404,
   Profile,
+  ProfileOrders,
   Register,
   ResetPassword
 } from '@pages';
-import '../../index.css';
-import styles from './app.module.css';
-import { AppHeader } from '@components';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { PageLoader } from '@ui';
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from '../../services/store';
-import { getUser, userSelectors } from '../../services/user/userSlice';
+import { Route, Routes, useNavigate } from 'react-router-dom';
+import '../../index.css';
+import { useDispatch } from '../../services/store';
+import { getUser } from '../../services/user/userSlice';
 import { GuestRoute } from '../guesr-route/guestoRouter';
+import styles from './app.module.css';
 
 const App = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const refreshToken = localStorage.getItem('refreshToken');
@@ -30,10 +33,21 @@ const App = () => {
   return (
     <div className={styles.app}>
       <AppHeader />
+      {/* TODO: позже внедрить */}
+      {/* <PageLoader /> */}
       <Routes>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='*' element={<NotFound404 />} />
         <Route path='/feed' element={<Feed />} />
+        <Route path='/profile/orders' element={<ProfileOrders />} />
+        <Route
+          path='/ingredients/:id'
+          element={
+            <Modal title='Детали ингредиента' onClose={() => navigate(-1)}>
+              <IngredientDetails />
+            </Modal>
+          }
+        />
         <Route
           path='/login'
           element={

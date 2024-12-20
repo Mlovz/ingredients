@@ -1,8 +1,14 @@
 import { getFeedsApi, getIngredientsApi } from '@api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { TIngredient } from '@utils-types';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TConstructorIngredient, TIngredient } from '@utils-types';
 
 export interface IConstructorState {
+  constructorItems: {
+    bun: TConstructorIngredient | null;
+    ingredients: TConstructorIngredient[];
+  };
+  orderRequest: boolean;
+  orderModalData: TIngredient | null;
   ingredients: {
     buns: TIngredient[];
     mains: TIngredient[];
@@ -17,6 +23,12 @@ export const fetchIngredients = createAsyncThunk(
 );
 
 const initialState: IConstructorState = {
+  constructorItems: {
+    bun: null,
+    ingredients: []
+  },
+  orderModalData: null,
+  orderRequest: false,
   ingredients: {
     buns: [],
     mains: [],
@@ -28,7 +40,27 @@ const initialState: IConstructorState = {
 const constructorSlice = createSlice({
   name: 'constructor',
   initialState,
-  reducers: {},
+  reducers: {
+    setAddIngredient: (state, action) => {
+      if (action.payload.type === 'bun') {
+        state.constructorItems.bun = action.payload;
+      } else {
+        state.constructorItems.ingredients = [
+          ...state.constructorItems.ingredients,
+          action.payload
+        ];
+      }
+    },
+    setRemoveIngredient: (state, action) => {
+      state.constructorItems.ingredients =
+        state.constructorItems.ingredients.filter(
+          (item) => item._id !== action.payload._id
+        );
+    }
+  },
+  selectors: {
+    selectedConstructorStore: (state) => state
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchIngredients.pending, (state) => {
@@ -56,12 +88,13 @@ const constructorSlice = createSlice({
 
 export const constructorActions = constructorSlice.actions;
 export const constructorReducer = constructorSlice.reducer;
+export const { selectedConstructorStore } = constructorSlice.selectors;
 
-export const selectedConstructorIsLoading = (state: IConstructorState) =>
-  state.isLoading;
-export const selectedConstructorBuns = (state: IConstructorState) =>
-  state.ingredients.buns;
-export const selectedConstructorMains = (state: IConstructorState) =>
-  state.ingredients.mains;
-export const selectedConstructorSauces = (state: IConstructorState) =>
-  state.ingredients.sauces;
+// export const selectedConstructorIsLoading = (state: IConstructorState) =>
+//   state.isLoading;
+// export const selectedConstructorBuns = (state: IConstructorState) =>
+//   state.ingredients.buns || ;
+// export const selectedConstructorMains = (state: IConstructorState) =>
+//   state.ingredients.mains;
+// export const selectedConstructorSauces = (state: IConstructorState) =>
+//   state.ingredients.sauces;
