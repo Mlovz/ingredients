@@ -1,6 +1,17 @@
-import { getFeedsApi, getIngredientsApi } from '@api';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TConstructorIngredient, TIngredient } from '@utils-types';
+import {
+  getFeedsApi,
+  getIngredientsApi,
+  getOrderByNumberApi,
+  orderBurgerApi,
+  TNewOrderResponse
+} from '@api';
+import {
+  createAsyncThunk,
+  createSlice,
+  nanoid,
+  PayloadAction
+} from '@reduxjs/toolkit';
+import { TConstructorIngredient, TIngredient, TOrder } from '@utils-types';
 
 export interface IConstructorState {
   constructorItems: {
@@ -8,18 +19,29 @@ export interface IConstructorState {
     ingredients: TConstructorIngredient[];
   };
   orderRequest: boolean;
-  orderModalData: TIngredient | null;
+  orderModalData: TOrder | null;
   ingredients: {
     buns: TIngredient[];
     mains: TIngredient[];
     sauces: TIngredient[];
   };
   isLoading: boolean;
+  orderStatus: boolean;
 }
 
 export const fetchIngredients = createAsyncThunk(
   'constructor/fetchIngredients',
   getIngredientsApi
+);
+
+export const addFetchIngredients = createAsyncThunk(
+  'constructor/addFetchIngredients',
+  (data: string[]) => orderBurgerApi(data)
+);
+
+export const getOrderNumber = createAsyncThunk(
+  'constructor/getOrderNumber',
+  (number: number) => getOrderByNumberApi(number)
 );
 
 const initialState: IConstructorState = {
@@ -34,7 +56,8 @@ const initialState: IConstructorState = {
     mains: [],
     sauces: []
   },
-  isLoading: false
+  isLoading: false,
+  orderStatus: false
 };
 
 const constructorSlice = createSlice({
@@ -47,7 +70,7 @@ const constructorSlice = createSlice({
       } else {
         state.constructorItems.ingredients = [
           ...state.constructorItems.ingredients,
-          action.payload
+          { ...action.payload, id: nanoid() }
         ];
       }
     },
@@ -82,7 +105,17 @@ const constructorSlice = createSlice({
       })
       .addCase(fetchIngredients.rejected, (state) => {
         state.isLoading = false;
-      });
+      })
+      .addCase(addFetchIngredients.pending, (state) => {
+        state.orderRequest = true;
+      })
+      .addCase(
+        addFetchIngredients.fulfilled,
+        (state, action: PayloadAction<TNewOrderResponse>) => {
+          state.orderRequest = false;
+          state.orderModalData = action.payload.order;
+        }
+      );
   }
 });
 
