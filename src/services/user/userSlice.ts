@@ -132,6 +132,18 @@ export const userSlice = createSlice({
       .addCase(forgotPassword.rejected, (state, action) => {
         state.isLoading = false;
         state.error = 'Произошла ошибка';
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, { payload }) => {
+        state.isLoading = false;
+        state.error = null;
+        state.user = payload.user;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = 'Произошла ошибка';
       });
   }
 });

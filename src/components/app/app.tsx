@@ -1,4 +1,4 @@
-import { AppHeader, IngredientDetails, Modal } from '@components';
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import {
   ConstructorPage,
   Feed,
@@ -33,6 +33,7 @@ const App = () => {
   return (
     <div className={styles.app}>
       <AppHeader />
+      {}
       {/* TODO: позже внедрить */}
       {/* <PageLoader /> */}
       <Routes>
@@ -45,6 +46,22 @@ const App = () => {
           element={
             <Modal title='Детали ингредиента' onClose={() => navigate(-1)}>
               <IngredientDetails />
+            </Modal>
+          }
+        />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            <Modal title='Детали ингредиента' onClose={() => navigate(-1)}>
+              <OrderInfo />
+            </Modal>
+          }
+        />
+        <Route
+          path='/feed/:number'
+          element={
+            <Modal title='Детали ингредиента' onClose={() => navigate(-1)}>
+              <OrderInfo />
             </Modal>
           }
         />

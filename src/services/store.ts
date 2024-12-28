@@ -7,13 +7,16 @@ import {
 } from 'react-redux';
 import { constructorReducer } from './constructor/constructorSlice';
 import { userReducer } from './user/userSlice';
-import { profile } from 'console';
 import { profileReducer } from './profile/profileSlice';
+import { feedReduser } from './feed/feedSlice';
+import { orderReduser } from './order/orderSlice';
 
 const rootReducer = combineReducers({
   ingredients: constructorReducer,
   user: userReducer,
-  profile: profileReducer
+  profile: profileReducer,
+  feed: feedReduser,
+  order: orderReduser
 });
 
 const store = configureStore({

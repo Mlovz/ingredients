@@ -4,8 +4,10 @@ import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
 import {
   addFetchIngredients,
-  getOrderNumber
+  constructorActions
 } from '../../services/constructor/constructorSlice';
+import { useNavigate } from 'react-router-dom';
+import { userSelectors } from '../../services/user/userSlice';
 
 export const BurgerConstructor: FC = () => {
   const constructorItems = useSelector(
@@ -15,17 +17,25 @@ export const BurgerConstructor: FC = () => {
   const orderModalData = useSelector(
     (state) => state.ingredients.orderModalData
   );
+  const authData = useSelector(userSelectors.selectedUser);
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
-    // dispatch(addFetchIngredients(constructorItems));
-    const bunID = constructorItems.bun._id;
-    const ingredients = constructorItems.ingredients.map((item) => item._id);
-    dispatch(addFetchIngredients([bunID, ...ingredients]));
+    if (authData) {
+      if (!constructorItems.bun || orderRequest) return;
+      const bunID = constructorItems.bun._id;
+      const ingredients = constructorItems.ingredients.map((item) => item._id);
+      dispatch(addFetchIngredients([bunID, ...ingredients]));
+      dispatch(constructorActions.setOrderRequest(true));
+    } else {
+      navigate('/login');
+    }
   };
-
-  const closeOrderModal = () => {};
+  const closeOrderModal = () => {
+    dispatch(constructorActions.setOrderRequest(false));
+    dispatch(constructorActions.setNullOrderModalData());
+  };
 
   const price = useMemo(
     () =>

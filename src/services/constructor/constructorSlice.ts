@@ -1,10 +1,4 @@
-import {
-  getFeedsApi,
-  getIngredientsApi,
-  getOrderByNumberApi,
-  orderBurgerApi,
-  TNewOrderResponse
-} from '@api';
+import { getIngredientsApi, orderBurgerApi, TNewOrderResponse } from '@api';
 import {
   createAsyncThunk,
   createSlice,
@@ -37,11 +31,6 @@ export const fetchIngredients = createAsyncThunk(
 export const addFetchIngredients = createAsyncThunk(
   'constructor/addFetchIngredients',
   (data: string[]) => orderBurgerApi(data)
-);
-
-export const getOrderNumber = createAsyncThunk(
-  'constructor/getOrderNumber',
-  (number: number) => getOrderByNumberApi(number)
 );
 
 const initialState: IConstructorState = {
@@ -79,6 +68,12 @@ const constructorSlice = createSlice({
         state.constructorItems.ingredients.filter(
           (item) => item._id !== action.payload._id
         );
+    },
+    setOrderRequest: (state, action) => {
+      state.orderRequest = action.payload;
+    },
+    setNullOrderModalData: (state) => {
+      state.orderModalData = null;
     }
   },
   selectors: {
